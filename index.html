@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yusuke Matsui — Computer Vision Researcher</title>
+  <meta name="description" content="Yusuke Matsui, Lecturer at the University of Tokyo. Research in computer vision, image retrieval, and approximate nearest neighbor search." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0e17;
+      --surface: #111827;
+      --surface2: #1a2233;
+      --border: rgba(255,255,255,0.07);
+      --accent: #6366f1;
+      --accent2: #06b6d4;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --heading: #f8fafc;
+      --radius: 14px;
+      --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent2); text-decoration: none; transition: opacity var(--transition); }
+    a:hover { opacity: 0.75; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
+
+    /* ── Navbar ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(10,14,23,0.75);
+      border-bottom: 1px solid var(--border);
+      padding: 0 max(2rem, calc((100% - 960px)/2));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--heading);
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--heading); opacity: 1; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 6rem 2rem 4rem;
+    }
+
+    /* Animated mesh gradient */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(99,102,241,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 60%, rgba(6,182,212,0.14) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 0%,  rgba(139,92,246,0.10) 0%, transparent 70%);
+      animation: meshMove 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes meshMove {
+      from { transform: scale(1) translateY(0); }
+      to   { transform: scale(1.06) translateY(-20px); }
+    }
+
+    /* Grid dots */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.35);
+      color: #a5b4fc;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.9rem;
+      border-radius: 99px;
+      margin-bottom: 1.25rem;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: #6366f1;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #6366f1;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.35; }
+    }
+
+    .hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 700;
+      color: var(--heading);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-title {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-title strong { color: var(--accent2); font-weight: 600; }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text);
+      max-width: 520px;
+      margin-bottom: 2rem;
+      opacity: 0.85;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+      border: none;
+    }
+    .btn:hover { transform: translateY(-2px); opacity: 1; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+    }
+    .btn-primary:hover { box-shadow: 0 6px 28px rgba(99,102,241,0.55); }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: #243044; }
+
+    /* Avatar */
+    .hero-avatar {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 5rem;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.25), 0 20px 60px rgba(0,0,0,0.5);
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    /* ── Sections ── */
+    section {
+      padding: 5rem max(2rem, calc((100% - 960px)/2));
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      color: var(--heading);
+      letter-spacing: -0.025em;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── Research interests ── */
+    #research { background: var(--surface); }
+
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .interest-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+    .interest-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99,102,241,0.4);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .interest-icon {
+      font-size: 1.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .interest-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--heading);
+      margin-bottom: 0.4rem;
+    }
+
+    .interest-card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Publications ── */
+    #publications { background: var(--bg); }
+
+    .pub-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .pub-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: transform var(--transition), border-color var(--transition);
+    }
+    .pub-card:hover {
+      transform: translateX(4px);
+      border-color: rgba(6,182,212,0.35);
+    }
+
+    .pub-year {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent2);
+      background: rgba(6,182,212,0.1);
+      border: 1px solid rgba(6,182,212,0.25);
+      border-radius: 6px;
+      padding: 0.3rem 0.6rem;
+      height: fit-content;
+      white-space: nowrap;
+    }
+
+    .pub-info h3 {
+      font-size: 0.975rem;
+      font-weight: 600;
+      color: var(--heading);
+      margin-bottom: 0.3rem;
+      line-height: 1.45;
+    }
+
+    .pub-info .authors {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .pub-info .venue {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #f59e0b;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 5px;
+      padding: 0.15rem 0.55rem;
+    }
+
+    .pub-links {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .pub-link {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.2rem 0.65rem;
+      border-radius: 5px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      transition: background var(--transition), color var(--transition);
+    }
+    .pub-link:hover { background: var(--accent); color: #fff; opacity: 1; border-color: var(--accent); }
+
+    /* ── News ── */
+    #news { background: var(--surface); }
+
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .news-item {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      padding: 1rem 1.25rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color var(--transition);
+    }
+    .news-item:hover { border-color: rgba(99,102,241,0.35); }
+
+    .news-date {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 5px;
+      padding: 0.2rem 0.6rem;
+      white-space: nowrap;
+      height: fit-content;
+    }
+
+    .news-text {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    /* ── Contact ── */
+    #contact { background: var(--bg); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+
+    .contact-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+    .contact-card:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-3px); }
+
+    .contact-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .contact-card h4 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .contact-card p, .contact-card a {
+      font-size: 0.9rem;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 2rem max(2rem, calc((100% - 960px)/2));
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    footer p {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: var(--heading); opacity: 1; }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 max(2rem, calc((100% - 960px)/2));
+    }
+
+    /* ── Fade-in animation ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+      .hero-avatar {
+        width: 120px; height: 120px;
+        font-size: 2.8rem;
+        order: -1;
+        margin: 0 auto;
+      }
+      .pub-card {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <span class="nav-logo">Yusuke <span>Matsui</span></span>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#news">News</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero" id="about">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">Computer Vision Researcher</div>
+        <h1 class="hero-name">Yusuke Matsui</h1>
+        <p class="hero-title">
+          Lecturer, <strong>The University of Tokyo</strong>
+        </p>
+        <p class="hero-desc">
+          I work on scalable visual search, image retrieval, and approximate nearest
+          neighbor algorithms. My goal is to make billion-scale visual intelligence fast, efficient, and practical.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#publications">📄 Publications</a>
+          <a class="btn btn-secondary" href="#contact">✉️ Contact</a>
+          <a class="btn btn-secondary" href="https://scholar.google.com/citations?user=Jary_LMQAAAAJ" target="_blank" rel="noopener">🎓 Google Scholar</a>
+        </div>
+      </div>
+      <div class="hero-avatar">YM</div>
+    </div>
+  </section>
+
+  <!-- ── Research Interests ── -->
+  <section id="research">
+    <p class="section-label fade-up">What I work on</p>
+    <h2 class="section-title fade-up">Research Interests</h2>
+    <div class="interests-grid">
+      <div class="interest-card fade-up">
+        <div class="interest-icon">🔍</div>
+        <h3>Image Retrieval</h3>
+        <p>Large-scale content-based image search at billion-scale with compact representations.</p>
+      </div>
+      <div class="interest-card fade-up">
+        <div class="interest-icon">⚡</div>
+        <h3>Approximate Nearest Neighbor</h3>
+        <p>Fast ANN search algorithms including product quantization and graph-based indexing.</p>
+      </div>
+      <div class="interest-card fade-up">
+        <div class="interest-icon">🧠</div>
+        <h3>Deep Learning for Vision</h3>
+        <p>Feature learning, self-supervised representation learning, and visual embeddings.</p>
+      </div>
+      <div class="interest-card fade-up">
+        <div class="interest-icon">🗜️</div>
+        <h3>Vector Quantization</h3>
+        <p>Compression of high-dimensional vectors for memory-efficient similarity search.</p>
+      </div>
+      <div class="interest-card fade-up">
+        <div class="interest-icon">🎨</div>
+        <h3>Multimedia Analysis</h3>
+        <p>Sketch-based retrieval, video search, and cross-modal matching.</p>
+      </div>
+      <div class="interest-card fade-up">
+        <div class="interest-icon">📦</div>
+        <h3>Open-source Libraries</h3>
+        <p>Building practical tools like <a href="https://github.com/matsui528/rii" target="_blank" rel="noopener">rii</a> for real-world vector search.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Publications ── -->
+  <section id="publications">
+    <p class="section-label fade-up">Selected works</p>
+    <h2 class="section-title fade-up">Publications</h2>
+    <div class="pub-list">
+
+      <div class="pub-card fade-up">
+        <div class="pub-year">2023</div>
+        <div class="pub-info">
+          <h3>Reconfigurable Inverted Index</h3>
+          <p class="authors">Y. Matsui, R. Hinami, S. Satoh</p>
+          <span class="venue">📰 IEEE TPAMI</span>
+          <div class="pub-links">
+            <a class="pub-link" href="https://arxiv.org/abs/1909.00922" target="_blank" rel="noopener">arXiv</a>
+            <a class="pub-link" href="https://github.com/matsui528/rii" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card fade-up">
+        <div class="pub-year">2018</div>
+        <div class="pub-info">
+          <h3>Billions of Photos and Videos: High-Capacity Visual Search at Flickr</h3>
+          <p class="authors">Y. Matsui, K. Uchihashi, T. Ogawa</p>
+          <span class="venue">🏆 KDD</span>
+          <div class="pub-links">
+            <a class="pub-link" href="https://dl.acm.org/doi/10.1145/3219819.3219837" target="_blank" rel="noopener">Paper</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card fade-up">
+        <div class="pub-year">2017</div>
+        <div class="pub-info">
+          <h3>Sketch-Based Manga Retrieval Using Manga109 Dataset</h3>
+          <p class="authors">Y. Matsui, K. Ito, Y. Aramaki, A. Fujimoto, T. Ogawa, T. Yamasaki, K. Aizawa</p>
+          <span class="venue">📰 Multimedia Tools and Applications</span>
+          <div class="pub-links">
+            <a class="pub-link" href="https://link.springer.com/article/10.1007/s11042-016-4020-z" target="_blank" rel="noopener">Paper</a>
+            <a class="pub-link" href="http://www.manga109.org/" target="_blank" rel="noopener">Dataset</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card fade-up">
+        <div class="pub-year">2016</div>
+        <div class="pub-info">
+          <h3>PQk-means: Billion-scale Clustering for Product-quantized Codes</h3>
+          <p class="authors">Y. Matsui, T. Ogawa, T. Yamasaki</p>
+          <span class="venue">🏆 ACM Multimedia</span>
+          <div class="pub-links">
+            <a class="pub-link" href="https://arxiv.org/abs/1709.03872" target="_blank" rel="noopener">arXiv</a>
+            <a class="pub-link" href="https://github.com/DwangoMediaVillage/pqkmeans" target="_blank" rel="noopener">Code</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card fade-up">
+        <div class="pub-year">2015</div>
+        <div class="pub-info">
+          <h3>Anime Sketch Colorization by Component-based Matching Using Deep Convolutional Neural Network</h3>
+          <p class="authors">Y. Matsui, K. Ito, Y. Aramaki, T. Ogawa, T. Yamasaki, K. Aizawa</p>
+          <span class="venue">🏆 ICME</span>
+          <div class="pub-links">
+            <a class="pub-link" href="https://ieeexplore.ieee.org/document/7177520" target="_blank" rel="noopener">Paper</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── News ── -->
+  <section id="news">
+    <p class="section-label fade-up">Latest updates</p>
+    <h2 class="section-title fade-up">News</h2>
+    <div class="news-list">
+      <div class="news-item fade-up">
+        <span class="news-date">2026.03</span>
+        <p class="news-text">Gave a talk at DEIM 2026 on scalable visual search.</p>
+      </div>
+      <div class="news-item fade-up">
+        <span class="news-date">2025.09</span>
+        <p class="news-text">Paper accepted at ICCV 2025.</p>
+      </div>
+      <div class="news-item fade-up">
+        <span class="news-date">2025.04</span>
+        <p class="news-text">Promoted to Lecturer at the University of Tokyo, Graduate School of Engineering.</p>
+      </div>
+      <div class="news-item fade-up">
+        <span class="news-date">2024.06</span>
+        <p class="news-text">Released a new version of <a href="https://github.com/matsui528/rii" target="_blank" rel="noopener">rii</a> with improved GPU support.</p>
+      </div>
+      <div class="news-item fade-up">
+        <span class="news-date">2024.02</span>
+        <p class="news-text">Invited talk at NII (National Institute of Informatics), Tokyo.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Contact ── -->
+  <section id="contact">
+    <p class="section-label fade-up">Get in touch</p>
+    <h2 class="section-title fade-up">Contact</h2>
+    <div class="contact-grid">
+      <div class="contact-card fade-up">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <h4>Email</h4>
+          <a href="mailto:matsui@hal.t.u-tokyo.ac.jp">matsui@hal.t.u-tokyo.ac.jp</a>
+        </div>
+      </div>
+      <div class="contact-card fade-up">
+        <div class="contact-icon">🏛️</div>
+        <div>
+          <h4>Affiliation</h4>
+          <p>The University of Tokyo<br/>Graduate School of Engineering<br/>Lecturer</p>
+        </div>
+      </div>
+      <div class="contact-card fade-up">
+        <div class="contact-icon">📍</div>
+        <div>
+          <h4>Location</h4>
+          <p>Hongo, Bunkyo-ku<br/>Tokyo, Japan 113-8656</p>
+        </div>
+      </div>
+      <div class="contact-card fade-up">
+        <div class="contact-icon">🔗</div>
+        <div>
+          <h4>Links</h4>
+          <p>
+            <a href="https://github.com/matsui528" target="_blank" rel="noopener">GitHub</a> ·
+            <a href="https://twitter.com/matsui_528" target="_blank" rel="noopener">Twitter / X</a> ·
+            <a href="https://scholar.google.com/citations?user=Jary_LMQAAAAJ" target="_blank" rel="noopener">Scholar</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <p>© 2026 Yusuke Matsui · The University of Tokyo</p>
+    <div class="footer-links">
+      <a href="mailto:matsui@hal.t.u-tokyo.ac.jp">Email</a>
+      <a href="https://github.com/matsui528" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://twitter.com/matsui_528" target="_blank" rel="noopener">Twitter</a>
+    </div>
+  </footer>
+
+  <script>
+    // Intersection Observer for fade-up animations
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
